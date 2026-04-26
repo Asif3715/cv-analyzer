@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="g" x1="250" y1="260" x2="780" y2="620" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#17E6C2"/>
+      <stop offset="0.55" stop-color="#25B6FF"/>
+      <stop offset="1" stop-color="#3B5BFF"/>
+    </linearGradient>
+    <linearGradient id="ink" x1="350" y1="320" x2="700" y2="720" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0B1420"/>
+      <stop offset="1" stop-color="#101E2E"/>
+    </linearGradient>
+
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#00101c" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <!-- Background (transparent-friendly, subtle) -->
+  <rect x="0" y="0" width="1024" height="1024" fill="#F7FAFF"/>
+
+  <!-- Icon group -->
+  <g filter="url(#soft)">
+    <!-- Top bar of T (document header) -->
+    <path d="M310 250 H714 a26 26 0 0 1 26 26 v78 a26 26 0 0 1-26 26 H560
+             a22 22 0 0 0-16 6 l-26 26 H310 a26 26 0 0 1-26-26 v-116 a26 26 0 0 1 26-26z"
+          fill="url(#ink)"/>
+
+    <!-- Accent line inside top bar -->
+    <path d="M340 308 H520" stroke="url(#g)" stroke-width="18" stroke-linecap="round"/>
+    <circle cx="520" cy="308" r="12" fill="url(#g)"/>
+
+    <!-- Stem of T -->
+    <path d="M462 410 H562 a22 22 0 0 1 22 22 v250 a22 22 0 0 1-22 22 H462
+             a22 22 0 0 1-22-22 V432 a22 22 0 0 1 22-22z"
+          fill="url(#ink)"/>
+
+    <!-- Document lines inside stem -->
+    <path d="M482 470 H542 M482 510 H532 M482 550 H540" stroke="#D7E2FF" stroke-width="14" stroke-linecap="round" opacity="0.65"/>
+
+    <!-- Magnifying glass ring -->
+    <circle cx="512" cy="560" r="158" fill="none" stroke="url(#ink)" stroke-width="40"/>
+
+    <!-- Magnifying handle -->
+    <path d="M635 682 L740 787" stroke="url(#ink)" stroke-width="46" stroke-linecap="round"/>
+
+    <!-- Network nodes + connectors -->
+    <path d="M512 430 V560 M512 560 H665 M512 560 H360" stroke="url(#g)" stroke-width="18" stroke-linecap="round" opacity="0.95"/>
+    <circle cx="512" cy="430" r="18" fill="url(#g)"/>
+    <circle cx="665" cy="560" r="18" fill="url(#g)"/>
+    <circle cx="360" cy="560" r="18" fill="url(#g)"/>
+
+    <!-- Small chart corner (analysis cue) -->
+    <path d="M610 310 H694 V354 H610 Z" fill="url(#g)" opacity="0.95"/>
+    <path d="M626 346 V330 M650 346 V322 M674 346 V314" stroke="#06121F" stroke-width="10" stroke-linecap="round" opacity="0.35"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g>
+    <text x="512" y="920" text-anchor="middle"
+          font-family="Poppins, Montserrat, Inter, system-ui, -apple-system, Segoe UI, Arial"
+          font-size="132" font-weight="700" letter-spacing="8"
+          fill="#0B1420">TALASH</text>
+  </g>
+</svg>
+

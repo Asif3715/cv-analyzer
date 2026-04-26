@@ -1,0 +1,97 @@
+- Education
+- Is the candidate’s early academic performance (SSE/HSSC) stable across stages?
+- What are the candidate’s UG/PG marks or CGPA, and how do they compare after normalization?
+- What is the actual degree progression path (e.g., BSc->MSc->MS/MPhil vs BS->MS->PhD)?
+- Are degree titles, specializations, institutions, and timelines complete and consistent?
+- What is the quality/ranking of attended institutions (THE/QS), and where is ranking unavailable?
+- Does the profile show coherent educational progression and specialization consistency?
+- Are there educational gaps between stages, and what are their durations?
+- Are educational gaps justified by productive professional activities?
+- Overall: how strong is the candidate’s educational profile?
+
+- Research: Journals
+- Is each journal venue legitimate and identifiable (e.g., ISSN-backed)?
+- Is the journal indexed in Web of Science? If yes, what is the Impact Factor?
+- Is the journal indexed in Scopus?
+- What is the journal quartile (Q1/Q2/Q3/Q4)?
+- What is the candidate’s authorship role (first/corresponding/both/other)?
+- Overall: is each journal paper high-quality, moderate, or low/unverified?
+- Are claimed rankings/quality verified from external sources rather than CV claims?
+
+- Research: Conferences
+- What is the conference’s recognized rank/standing (including A* if available)?
+- Is the conference mature/established (series continuity)?
+- Is the proceedings venue indexed/published on credible platforms (Scopus/IEEE/Springer/ACM)?
+- What is the candidate’s authorship role in conference papers?
+- Overall: how strong is each conference publication venue and contribution?
+
+- Supervision
+- How many MS/PhD students were supervised as main supervisor?
+- How many MS/PhD students were supervised as co-supervisor?
+- How many publications were produced with supervised students?
+- Does the candidate actively publish with supervised students?
+- Does the candidate appear as corresponding author (leadership signal)?
+- Is the candidate listed before/after students (supervisory authorship convention)?
+- How strong is the candidate’s contribution to student research productivity?
+
+- Books
+- What books are authored/co-authored by the candidate?
+- Are metadata complete and verifiable (name, authors, ISBN, publisher, year, link)?
+- What is the candidate’s authorship role (sole/lead/co-author/contributor)?
+- How credible is the publisher and scholarly value of the book output?
+- Are books accessible/verifiable via online sources?
+
+- Patents
+- Has the candidate produced any patentable innovation?
+- Are patent records authentic and complete (number, title, date, inventors, filing country, link)?
+- What is the candidate’s inventor role (lead/co/contributor)?
+- Do contributions include applied invention beyond publications?
+- Does the profile show research translation into practical/commercial outcomes?
+
+- Topic Variability
+- Is the candidate a specialist with deep work in one narrow domain?
+- Is the candidate interdisciplinary across related/unrelated areas?
+- Has the research focus remained stable over time or shifted significantly?
+- What are major themes, concentration percentages, dominant area, and diversity score?
+
+- Co-Author / Collaboration
+- Does the candidate frequently collaborate with the same research group (stable network)?
+- Does the candidate collaborate with a wide range of authors (broader reach)?
+- Is the candidate leading collaborations or mostly contributing within groups?
+- Are there strong supervision-related collaborations with students?
+- Is collaboration cross-institutional or interdisciplinary?
+- What are key indicators (unique co-authors, recurring collaborators, network size, diversity)?
+
+- Professional Experience
+- Is the career timeline internally consistent?
+- Are there overlaps between education and employment, and are they reasonable?
+- Are there overlaps between multiple jobs, and are they legitimate?
+- Are there unexplained employment gaps?
+- Are gaps justified by productive activities (education/research/freelancing/etc.)?
+- Does the profile show career continuity, progression, and professional maturity?
+
+- Skills Alignment
+- Are the candidate’s claimed skills credible?
+- Are skills supported by actual work experience and responsibilities?
+- Are skills supported by publication topics/research outputs?
+- Are skills consistent across education, work, research, projects, certifications?
+- How relevant are evidenced skills to the target job description?
+- Which skills are strongly evidenced, partially evidenced, weakly evidenced, or unsupported?
+- Which skills are central strengths, and which appear overstated?
+
+- Missing Information / Clarification
+- Which profile elements are missing, incomplete, or unclear (scores, dates, publication details, authorship)?
+- What specific missing items should be requested from each candidate?
+- Can personalized draft emails be generated per candidate for missing details?
+
+- Cross-Field Overlapping Questions
+- Do publication themes support claimed skills and stated specialization?
+- Do educational gaps align with and get justified by experience timeline?
+- Are high-impact publications consistent with authorship role and career stage?
+- Do supervision claims align with co-author patterns and student-linked publications?
+- Are skill claims evidenced jointly by job history plus publication record?
+- Is the overall profile internally consistent across education, research, skills, and experience?
+- Are weak/unsupported claims concentrated in any one section or spread across sections?
+- Is candidate strength deep-specialist or broad-interdisciplinary when combining topic, skill, and role history?
+- Do ranking/quality indicators (institutions, venues) align with demonstrated outputs and progression?
+- What confidence level should be assigned to final candidate evaluation given verification completeness?

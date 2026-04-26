@@ -1,0 +1,45 @@
+# Node / React build artifacts
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.cache/
+
+# Python artifacts (backend)
+backend/__pycache__/
+backend/**/*.pyc
+.venv/
+venv/
+ENV/
+env/
+*.pyc
+*.pyo
+
+# Logs
+*.log
+logs/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.project
+.classpath
+
+# Environment variables
+.env
+.env.*
+
+# Build outputs
+dist/
+build/
+out/
+coverage/
+htmlcov/
+.coverage
+
+# Misc
+.venv*/
+*.swp
+*.swo

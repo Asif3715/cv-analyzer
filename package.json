@@ -1,0 +1,10 @@
+{
+  "name": "talash-root",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "npm --prefix frontend-react run dev",
+    "build": "npm --prefix frontend-react run build",
+    "frontend:install": "npm --prefix frontend-react install"
+  }
+}
