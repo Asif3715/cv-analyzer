@@ -43,3 +43,4 @@ htmlcov/
 .venv*/
 *.swp
 *.swo
+talashenv/
