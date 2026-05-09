@@ -349,7 +349,7 @@ const ANALYSIS_MODULES = [
 ];
 
 export default function App() {
-  const [backendUrl, setBackendUrl] = useState("http://127.0.0.1:8000");
+  const [backendUrl, setBackendUrl] = useState(import.meta.env.VITE_API_URL || "http://127.0.0.1:8000");
   const [forceReprocess, setForceReprocess] = useState(false);
   const [files, setFiles] = useState([]);
   const [uploadResult, setUploadResult] = useState(null);
