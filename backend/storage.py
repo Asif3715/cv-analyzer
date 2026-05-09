@@ -2,7 +2,7 @@ import uuid
 
 import httpx
 
-from backend.config import settings
+from config import settings
 
 
 def _headers() -> dict:
