@@ -8,8 +8,8 @@ from collections import Counter
 
 import httpx
 
-from backend.config import settings
-from backend.models import ResearchVerification
+from config import settings
+from model import ResearchVerification
 
 
 RESEARCH_QUESTIONS = [
