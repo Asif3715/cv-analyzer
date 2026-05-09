@@ -34,7 +34,7 @@ app = FastAPI(title="TALASH Module 1 API", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://cv-analyzer-drab.vercel.app/",
+        "https://cv-analyzer-drab.vercel.app",
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",
