@@ -9,7 +9,7 @@ from collections import Counter
 import httpx
 
 from config import settings
-from model import ResearchVerification
+from models import ResearchVerification
 
 
 RESEARCH_QUESTIONS = [
