@@ -3,7 +3,7 @@ from collections import Counter
 
 import httpx
 
-from backend.config import settings
+from config import settings
 
 
 SKILLS_QUESTIONS = [
