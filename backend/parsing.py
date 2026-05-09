@@ -7,8 +7,8 @@ from dataclasses import dataclass
 import httpx
 from pydantic import ValidationError
 
-from backend.config import settings
-from backend.schemas import CandidateProfile
+from config import settings
+from schemas import CandidateProfile
 
 
 SYSTEM_PROMPT = """You are a CV information extraction engine for TALASH.
