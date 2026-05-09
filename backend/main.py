@@ -4,12 +4,12 @@ from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
-from backend.config import settings
-from backend.database import Base, engine, get_db
-from backend.education import compute_education_facts, run_education_llm_analysis
-from backend.books_patents import compute_books_patents_facts, run_books_patents_llm_analysis
-from backend.experience import compute_experience_facts, run_experience_llm_analysis
-from backend.models import (
+from config import settings
+from database import Base, engine, get_db
+from education import compute_education_facts, run_education_llm_analysis
+from books_patents import compute_books_patents_facts, run_books_patents_llm_analysis
+from experience import compute_experience_facts, run_experience_llm_analysis
+from models import (
     Candidate,
     CVDocument,
     CVParsedProfile,
@@ -21,12 +21,12 @@ from backend.models import (
     ResearchVerification,
     SkillsAnalysis,
 )
-from backend.parsing import collect_missing_unclear_fields, parse_cv_text_with_llm
-from backend.pdf_utils import extract_text_from_pdf_bytes
-from backend.research import compute_research_facts, extract_unverified_fingerprints, run_research_llm_analysis
-from backend.supervision import compute_supervision_facts, run_supervision_llm_analysis
-from backend.skills import compute_skills_facts, run_skills_llm_analysis
-from backend.storage import upload_pdf_to_supabase
+from parsing import collect_missing_unclear_fields, parse_cv_text_with_llm
+from pdf_utils import extract_text_from_pdf_bytes
+from research import compute_research_facts, extract_unverified_fingerprints, run_research_llm_analysis
+from supervision import compute_supervision_facts, run_supervision_llm_analysis
+from skills import compute_skills_facts, run_skills_llm_analysis
+from storage import upload_pdf_to_supabase
 
 
 app = FastAPI(title="TALASH Module 1 API", version="0.1.0")
