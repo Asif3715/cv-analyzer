@@ -9,3 +9,5 @@ httpx
 python-dotenv
 pymupdf
 pdfplumber
+psycopg[binary]
+
