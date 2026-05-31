@@ -6,12 +6,10 @@ import {
   analyzeSkills,
   analyzeEducation,
   api,
-  getBooksPatents,
   getBooksPatentsFacts,
   getDocument,
   getEducationFacts,
   getExperienceFacts,
-  getSupervision,
   getSupervisionFacts,
   analyzeSupervision,
   getResearchFacts,
@@ -19,334 +17,27 @@ import {
   listDocuments,
   reprocessDocument,
   recheckUnverifiedResearch,
-  uploadCVs
+  uploadCVs,
 } from "./api";
-
-const logoUrl = "/logo.svg";
-
-function FileIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="fileIcon">
-      <path d="M7 2h7l5 5v15a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M14 2v5h5" fill="none" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M9 13h6M9 17h6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function CvIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="cvIcon">
-      <path d="M6 3h8l4 4v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M14 3v5h5" fill="none" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M8 12h8M8 16h5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function NavIcon({ id }) {
-  const common = { fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round" };
-  switch (id) {
-    case "upload":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true" className="navIcon">
-          <path d="M12 16V6" {...common} />
-          <path d="m8 10 4-4 4 4" {...common} />
-          <path d="M5 18h14" {...common} />
-        </svg>
-      );
-    case "documents":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true" className="navIcon">
-          <path d="M6 4h12v16H6z" {...common} />
-          <path d="M9 8h6M9 12h6M9 16h4" {...common} />
-        </svg>
-      );
-    case "analysis":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true" className="navIcon">
-          <path d="M5 19V9" {...common} />
-          <path d="M11 19V5" {...common} />
-          <path d="M17 19v-8" {...common} />
-          <path d="M3 19h18" {...common} />
-        </svg>
-      );
-    default:
-      return null;
-  }
-}
-
-function ModuleIcon({ id }) {
-  const common = { fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round" };
-  switch (id) {
-    case "education":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true" className="moduleIcon">
-          <path d="M12 3 2 8l10 5 8-4v6" {...common} />
-          <path d="M6 10.5V15c0 1.2 2.7 3 6 3s6-1.8 6-3v-4.5" {...common} />
-        </svg>
-      );
-    case "skills":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true" className="moduleIcon">
-          <path d="M10 6h10" {...common} />
-          <path d="M4 6h2" {...common} />
-          <path d="M10 12h10" {...common} />
-          <path d="M4 12h2" {...common} />
-          <path d="M10 18h10" {...common} />
-          <path d="M4 18h2" {...common} />
-        </svg>
-      );
-    case "experience":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true" className="moduleIcon">
-          <path d="M4 8h16v10H4z" {...common} />
-          <path d="M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" {...common} />
-        </svg>
-      );
-    case "research":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true" className="moduleIcon">
-          <path d="M10 4a6 6 0 1 1 0 12 6 6 0 0 1 0-12z" {...common} />
-          <path d="m15 15 5 5" {...common} />
-        </svg>
-      );
-    case "supervision":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true" className="moduleIcon">
-          <path d="M4 18c1.5-3 4-5 8-5s6.5 2 8 5" {...common} />
-          <path d="M8 10a4 4 0 1 1 8 0 4 4 0 0 1-8 0z" {...common} />
-        </svg>
-      );
-    case "awards":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true" className="moduleIcon">
-          <path d="M12 15 8.5 17l.8-4.1L6 10l4.2-.6L12 5.5l1.8 3.9 4.2.6-3.3 2.9.8 4.1z" {...common} />
-        </svg>
-      );
-    case "books_patents":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true" className="moduleIcon">
-          <path d="M5 4h9a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4z" {...common} />
-          <path d="M14 7h5v13" {...common} />
-        </svg>
-      );
-    default:
-      return null;
-  }
-}
+import { ANALYSIS_MODULES, NAV_ITEMS } from "./constants";
+import {
+  AnswerCardGrid,
+  AssessmentHero,
+  AnalysisToolbar,
+  DataTable,
+  EducationTrendChart,
+  EmptyState,
+  FileIcon,
+  ModuleRail,
+  PageHeader,
+  Section,
+  Sidebar,
+  SummaryTile,
+} from "./components";
 
 function prettyJson(value) {
   return JSON.stringify(value, null, 2);
 }
-
-function SummaryTile({ label, value }) {
-  return (
-    <div className="tile">
-      <div className="tileLabel">{label}</div>
-      <div className="tileValue">{value}</div>
-    </div>
-  );
-}
-
-function AnswerCardGrid({ answers, prefix }) {
-  if (!answers || answers.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className="answerGrid">
-      {answers.map((answer, index) => (
-        <article className="answerCard" key={`${prefix}-${index}`}>
-          <div className="answerCardTop">
-            <span className="answerIndex">{String(index + 1).padStart(2, "0")}</span>
-            <span className={`answerStatus ${answer.status || "missing"}`}>{answer.status || "missing"}</span>
-          </div>
-          <h4 className="answerQuestion">{answer.question || "Question"}</h4>
-          <p className="answerText">{answer.answer || "No answer returned."}</p>
-          <div className="answerFooter">
-            <span>Confidence {answer.confidence ?? 0}</span>
-            {Array.isArray(answer.evidence_fields) && answer.evidence_fields.length > 0 ? (
-              <span>{answer.evidence_fields.join(" • ")}</span>
-            ) : (
-              <span>No evidence fields</span>
-            )}
-          </div>
-        </article>
-      ))}
-    </div>
-  );
-}
-
-function EducationTrendChart({ rows }) {
-  const [hovered, setHovered] = useState(null);
-  const points = (rows || [])
-    .map((row) => ({
-      year: Number.parseInt(row.end_year, 10),
-      value: Number(row.score_normalized_100),
-      rawValue: Number.parseFloat(String(row.score_raw || "").replace(/[^0-9.]+/g, "")),
-      rawLabel: row.score_raw || "missing",
-      label: row.degree_title || row.level || "Education",
-      institution: row.institution || "",
-    }))
-    .filter((point) => Number.isFinite(point.year) && Number.isFinite(point.value));
-
-  if (points.length < 2) {
-    return (
-      <div className="chartEmpty">
-        Not enough normalized education scores to plot a trend yet.
-      </div>
-    );
-  }
-
-  const width = 920;
-  const height = 280;
-  const padding = { top: 24, right: 24, bottom: 48, left: 56 };
-  const plotWidth = width - padding.left - padding.right;
-  const plotHeight = height - padding.top - padding.bottom;
-  const sorted = [...points].sort((a, b) => a.year - b.year);
-  const rawValues = sorted.map((point) => point.rawValue).filter((value) => Number.isFinite(value));
-  const hasRawSeries = rawValues.length >= 2;
-  const rawMin = hasRawSeries ? Math.min(...rawValues) : 0;
-  const rawMax = hasRawSeries ? Math.max(...rawValues) : 100;
-
-  const xFor = (index) =>
-    padding.left + (sorted.length === 1 ? plotWidth / 2 : (plotWidth * index) / (sorted.length - 1));
-  const yFor = (value) => padding.top + plotHeight - (Math.max(0, Math.min(100, value)) / 100) * plotHeight;
-  const rawScaledYFor = (value) => {
-    if (!Number.isFinite(value)) return null;
-    if (rawMax === rawMin) {
-      return yFor(50);
-    }
-    const scaled = ((value - rawMin) / (rawMax - rawMin)) * 100;
-    return yFor(scaled);
-  };
-
-  const normalizedPath = sorted
-    .map((point, index) => `${index === 0 ? "M" : "L"} ${xFor(index)} ${yFor(point.value)}`)
-    .join(" ");
-
-  const rawPath = sorted
-    .map((point, index) => {
-      const y = rawScaledYFor(point.rawValue);
-      return Number.isFinite(y) ? `${index === 0 ? "M" : "L"} ${xFor(index)} ${y}` : null;
-    })
-    .filter(Boolean)
-    .join(" ");
-
-  function showPoint(point, index) {
-    const x = xFor(index);
-    const normalizedY = yFor(point.value);
-    const rawY = rawScaledYFor(point.rawValue);
-    setHovered({
-      ...point,
-      index,
-      x,
-      normalizedY,
-      rawY,
-      rawMin,
-      rawMax,
-      hasRawSeries,
-    });
-  }
-
-  return (
-    <div className="chartShell">
-      <div className="chartHeader">
-        <div>
-          <p className="eyebrow">Trend</p>
-          <h4>Normalized Education Scores</h4>
-        </div>
-        <div className="chartLegend">
-          <span className="legendItem"><span className="legendLine normalized" />Normalized</span>
-          <span className="legendItem"><span className="legendLine raw" />Raw trend</span>
-        </div>
-      </div>
-      <div className="chartStage">
-        <svg className="trendChart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Education score trend">
-          <defs>
-            <linearGradient id="trendFill" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="rgba(6, 182, 212, 0.28)" />
-              <stop offset="100%" stopColor="rgba(6, 182, 212, 0.02)" />
-            </linearGradient>
-          </defs>
-
-          {[0, 25, 50, 75, 100].map((tick) => {
-            const y = yFor(tick);
-            return (
-              <g key={`tick-${tick}`}>
-                <line x1={padding.left} x2={width - padding.right} y1={y} y2={y} className="chartGridLine" />
-                <text x={padding.left - 10} y={y + 4} textAnchor="end" className="chartAxisLabel">
-                  {tick}
-                </text>
-              </g>
-            );
-          })}
-
-          <path
-            d={`${normalizedPath} L ${xFor(sorted.length - 1)} ${height - padding.bottom} L ${xFor(0)} ${height - padding.bottom} Z`}
-            className="trendArea"
-            fill="url(#trendFill)"
-          />
-          <path d={normalizedPath} className="trendLine normalized" />
-          {hasRawSeries && <path d={rawPath} className="trendLine raw" />}
-
-          {sorted.map((point, index) => {
-            const x = xFor(index);
-            const y = yFor(point.value);
-            const rawY = rawScaledYFor(point.rawValue);
-            return (
-              <g
-                key={`${point.year}-${index}`}
-                onMouseEnter={() => showPoint(point, index)}
-                onMouseLeave={() => setHovered(null)}
-              >
-                <circle cx={x} cy={y} r="6" className="trendPoint normalized" />
-                {Number.isFinite(rawY) && <circle cx={x} cy={rawY} r="5" className="trendPoint raw" />}
-                <circle cx={x} cy={y} r="14" className="trendHitArea" />
-                <text x={x} y={height - padding.bottom + 18} textAnchor="middle" className="chartAxisLabel">
-                  {point.year}
-                </text>
-              </g>
-            );
-          })}
-        </svg>
-
-        {hovered && (
-          <div className="chartTooltip">
-            <div className="chartTooltipTitle">
-              {hovered.year} · {hovered.label}
-            </div>
-            <div className="chartTooltipSub">{hovered.institution || "Institution not listed"}</div>
-            <div className="chartTooltipRows">
-              <div><span>Normalized</span><strong>{hovered.value}</strong></div>
-              <div><span>Raw</span><strong>{hovered.rawLabel}</strong></div>
-              {hovered.hasRawSeries && Number.isFinite(hovered.rawValue) && (
-                <div><span>Raw range</span><strong>{hovered.rawMin} to {hovered.rawMax}</strong></div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-const NAV_ITEMS = [
-  { id: "upload", label: "Upload and parse CVs", description: "Import PDFs and create parsed candidate records." },
-  { id: "documents", label: "Previously parsed CVs", description: "Browse parsed profiles and switch the active CV." },
-  { id: "analysis", label: "Analysis and scores", description: "Review education, skills, research, and more." },
-];
-
-const ANALYSIS_MODULES = [
-  { id: "education", label: "Education", description: "Academic progression and normalized score trend." },
-  { id: "skills", label: "Skills", description: "Evidence-backed capability map and coverage." },
-  { id: "experience", label: "Experience", description: "Career continuity and role progression." },
-  { id: "research", label: "Research", description: "Publication verification and venue quality." },
-  { id: "supervision", label: "Supervision", description: "Mentorship and advising history." },
-  { id: "awards", label: "Awards", description: "Recognition timeline and issuers." },
-  { id: "books_patents", label: "Books / Patents", description: "Merged books and patents profile." },
-];
 
 export default function App() {
   const [backendUrl, setBackendUrl] = useState(import.meta.env.VITE_API_URL || "http://127.0.0.1:8000");
@@ -377,6 +68,7 @@ export default function App() {
   const [loadingMessage, setLoadingMessage] = useState("");
   const [error, setError] = useState("");
   const [showRaw, setShowRaw] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
   const client = useMemo(() => api(backendUrl), [backendUrl]);
@@ -390,15 +82,24 @@ export default function App() {
     (row) => row.verification?.verification_status === "unverified"
   ).length;
   const activeModuleMeta = ANALYSIS_MODULES.find((module) => module.id === activeModule) || ANALYSIS_MODULES[0];
-  const activeNavMeta = NAV_ITEMS.find((item) => item.id === activeSection) || NAV_ITEMS[0];
   const selectedCandidateName =
-    selectedDocDetail?.candidate_name || selectedDocDetail?.parsed_payload?.name?.value || "No CV selected";
-
-  function handleFileSelection(event) {
-    const nextFiles = Array.from(event.target.files || []);
-    setFiles(nextFiles);
+    selectedDocDetail?.candidate_name || selectedDocDetail?.parsed_payload?.name?.value || "No candidate selected";
+  function addFiles(nextFiles) {
+    const pdfs = nextFiles.filter((f) => f.type === "application/pdf" || f.name.toLowerCase().endsWith(".pdf"));
+    if (pdfs.length === 0) return;
+    setFiles((current) => [...current, ...pdfs]);
     setUploadResult(null);
     setUploadProgress(0);
+  }
+
+  function handleFileSelection(event) {
+    addFiles(Array.from(event.target.files || []));
+  }
+
+  function handleDrop(event) {
+    event.preventDefault();
+    setIsDragging(false);
+    addFiles(Array.from(event.dataTransfer.files || []));
   }
 
   function openFilePicker() {
@@ -482,7 +183,7 @@ export default function App() {
       setSupervisionFacts(null);
       setSupervisionAnalysis(null);
       setActiveModule("education");
-      setActiveSection("documents");
+      setActiveSection("analysis");
     } catch (err) {
       setError(err?.response?.data?.detail || err.message);
     } finally {
@@ -490,23 +191,6 @@ export default function App() {
     }
   }
 
-  function handleDocumentSelection(documentId) {
-    setSelectedDocId(documentId);
-    setEducationFacts(null);
-    setEducationAnalysis(null);
-    setSkillsFacts(null);
-    setSkillsAnalysis(null);
-    setExperienceFacts(null);
-    setExperienceAnalysis(null);
-    setResearchFacts(null);
-    setResearchAnalysis(null);
-    setAwardsData(null);
-    setBooksPatentsFacts(null);
-    setBooksPatentsAnalysis(null);
-    setSupervisionFacts(null);
-    setSupervisionAnalysis(null);
-    setActiveSection("analysis");
-  }
 
   async function handleLoadSkillsFacts() {
     if (!selectedDocId) return;
@@ -742,299 +426,284 @@ export default function App() {
     }
   }
 
+  useEffect(() => {
+    if (activeSection !== "analysis" || !selectedDocId) return;
+    if (activeModule === "education" && !educationFacts) handleLoadEducationFacts();
+    else if (activeModule === "skills" && !skillsFacts) handleLoadSkillsFacts();
+    else if (activeModule === "experience" && !experienceFacts) handleLoadExperienceFacts();
+    else if (activeModule === "research" && !researchFacts) handleLoadResearchFacts();
+    else if (activeModule === "supervision" && !supervisionFacts) handleLoadSupervisionFacts();
+    else if (activeModule === "awards" && !awardsData) handleLoadAwards();
+    else if (activeModule === "books_patents" && !booksPatentsFacts) handleLoadBooksPatentsFacts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeModule, activeSection, selectedDocId]);
+
+  const sectionLabels = { upload: "Upload", documents: "Candidates", analysis: "Analysis" };
+  const breadcrumbModule = activeSection === "analysis" && selectedDocId ? activeModuleMeta.label : null;
+
   return (
     <div className="app">
-      <aside className="sidebar">
-        <div className="sidebarBrand">
-          <h1 className="logo">
-            <span>TALASH</span>
-          </h1>
-          <p className="sidebarTag">Executive candidate dossier</p>
-        </div>
+      <Sidebar
+        brand={(
+          <div className="brandMark">
+            <div className="brandIcon">T</div>
+            <div className="brandText">
+              <h1>Talash</h1>
+              <p>CV intelligence</p>
+            </div>
+          </div>
+        )}
+        navItems={NAV_ITEMS}
+        activeSection={activeSection}
+        onNavigate={setActiveSection}
+        candidates={docs}
+        selectedDocId={selectedDocId}
+        onSelectCandidate={(id) => {
+          handleLoadDoc(id);
+          setActiveSection("analysis");
+        }}
+        activeCandidate={
+          selectedDocDetail
+            ? { name: selectedCandidateName, file: selectedDocDetail.file_name }
+            : null
+        }
+      />
 
-        <div className="sidebarCard">
-          <label className="checkboxRow">
-            <input
-              type="checkbox"
-              checked={forceReprocess}
-              onChange={(e) => setForceReprocess(e.target.checked)}
-            />
-            Force reprocess duplicates
-          </label>
-        </div>
-
-        <div className="sidebarCard navCard">
-          <div className="sidebarCardLabel">Navigation</div>
-          <div className="navGroup">
-            {NAV_ITEMS.map((item) => (
-              <button
-                key={item.id}
-                className={`navButton ${activeSection === item.id ? "active" : ""}`}
-                onClick={() => setActiveSection(item.id)}
-              >
-                <span className="navButtonTop">
-                  <NavIcon id={item.id} />
-                  <span className="navButtonLabel">{item.label}</span>
-                </span>
-                <span className="navButtonDesc">{item.description}</span>
+      <div className="main">
+        <header className="topbar">
+          <div className="breadcrumb">
+            <span>{sectionLabels[activeSection]}</span>
+            {breadcrumbModule && (
+              <>
+                <span className="breadcrumbSep">/</span>
+                <strong>{breadcrumbModule}</strong>
+              </>
+            )}
+          </div>
+          <div className="topbarActions">
+            {activeSection === "documents" && docs.length > 0 && (
+              <button className="btn btnGhost btnSm" type="button" onClick={handleRefreshDocs} disabled={loading}>
+                Refresh
               </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="sidebarCard sidebarSummary">
-          <div className="sidebarCardLabel">Current dossier</div>
-          <div className="selectedDocBadge">{selectedDocDetail?.status || "No CV selected"}</div>
-          <div className="sidebarSummaryName">{selectedCandidateName}</div>
-          <div className="sidebarSummaryTitle">{selectedDocDetail?.file_name || "No document loaded"}</div>
-          <div className="sidebarSummaryMeta">{selectedDocDetail?.status || "Awaiting selection"}</div>
-          <div className="sidebarSummaryGrid">
-            <div>
-              <span>Documents</span>
-              <strong>{docs.length}</strong>
-            </div>
-            <div>
-              <span>Current view</span>
-              <strong>{activeModuleMeta.label}</strong>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      <main className="content">
-        <section className="heroPanel">
-          <div className="heroCopy">
-            <h1 className="heroTitle">TALASH WORKSPACE</h1>
-            <p className="heroSubtitle">Automated CV Analysis</p>
-          </div>
-        </section>
-
-        <section className="selectedDocBanner">
-          <div>
-            <p className="eyebrow">Selected CV</p>
-            <h3 className="selectedCvName">
-              <CvIcon />
-              <span>{selectedCandidateName}</span>
-            </h3>
-          </div>
-          <div className="selectedDocActions">
-            <button className="btn secondary" onClick={() => setActiveSection("documents")}>
-              {selectedDocDetail ? "Change CV" : "Select CV"}
-            </button>
-          </div>
-        </section>
-
-        {activeSection === "upload" && (
-          <section className="card">
-            <div className="sectionBanner">
-              <div>
-                <h2>Upload and parse CVs</h2>
-              </div>
-            </div>
-            <div className="uploadControls">
-              <button className="btn secondary" type="button" onClick={openFilePicker}>
-                Choose Files
+            )}
+            {!selectedDocId && docs.length > 0 && (
+              <button className="btn btnSm" type="button" onClick={() => setActiveSection("documents")}>
+                Browse candidates
               </button>
-              <span className="fileCountBadge">{files.length} selected</span>
-              <input
-                ref={fileInputRef}
-                className="fileInputHidden"
-                type="file"
-                accept="application/pdf"
-                multiple
-                onChange={handleFileSelection}
+            )}
+          </div>
+        </header>
+
+        <div className="content">
+          <div className="contentInner">
+          {error && (
+            <div className="errorBanner" role="alert">
+              <span>{error}</span>
+              <button className="errorDismiss" onClick={() => setError("")} aria-label="Dismiss">×</button>
+            </div>
+          )}
+
+          {activeSection === "upload" && (
+            <>
+              <PageHeader
+                title="Upload CVs"
+                description="Import PDF resumes. We extract structured profiles you can analyze module by module."
               />
-            </div>
-            {files.length > 0 && (
-              <div className="fileTray">
-                {files.map((file, index) => (
-                  <div className="fileChip" key={`${file.name}-${index}`}>
-                    <FileIcon />
-                    <span className="fileChipName">{file.name}</span>
-                    <button className="fileChipRemove" type="button" onClick={() => removeSelectedFile(index)}>
-                      Discard
-                    </button>
-                  </div>
-                ))}
-                <button className="btn secondary tiny clearAllButton" type="button" onClick={clearSelectedFiles}>
-                  Clear All
-                </button>
-              </div>
-            )}
 
-            {loading && activeSection === "upload" && (
-              <div className="uploadProgressWrap" aria-label="Upload progress">
-                <div className="uploadProgressHeader">
-                  <span>{loadingMessage || "Uploading..."}</span>
-                  <strong>{uploadProgress}%</strong>
-                </div>
-                <div className="uploadProgressBar">
-                  <div className="uploadProgressFill" style={{ width: `${uploadProgress}%` }} />
-                </div>
-              </div>
-            )}
-
-            <button className="btn" onClick={handleUpload} disabled={loading || files.length === 0}>
-              {loading ? "Processing..." : "Process CVs"}
-            </button>
-            {uploadResult && (
-              <>
-                <div className="tilesRow">
-                  <SummaryTile
-                    label="Total Files"
-                    value={(uploadResult.results || []).length}
-                  />
-                  <SummaryTile
-                    label="Success"
-                    value={(uploadResult.results || []).filter((x) => x.status === "success").length}
-                  />
-                  <SummaryTile
-                    label="Failed"
-                    value={(uploadResult.results || []).filter((x) => x.status === "failed").length}
-                  />
-                  <SummaryTile
-                    label="Skipped"
-                    value={(uploadResult.results || []).filter((x) => x.status === "skipped").length}
-                  />
-                </div>
-
-                <table className="dataTable">
-                  <thead>
-                    <tr>
-                      <th>File</th>
-                      <th>Status</th>
-                      <th>Document ID</th>
-                      <th>Notes</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(uploadResult.results || []).map((r, idx) => (
-                      <tr key={`${r.file}-${idx}`}>
-                        <td>{r.file}</td>
-                        <td>
-                          <span className={`badge ${r.status}`}>{r.status}</span>
-                        </td>
-                        <td>{r.document_id || "-"}</td>
-                        <td>{r.error || r.reason || "-"}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </>
-            )}
-          </section>
-        )}
-
-        {activeSection === "documents" && (
-          <section className="card">
-            <div className="sectionBanner">
-              <div>
-                <h2>Previously parsed CVs</h2>
-                <p className="sectionMeta">Total loaded CVs: {docs.length}</p>
-              </div>
-            </div>
-
-            <div className="docTableWrap">
-              <table className="dataTable">
-                <thead>
-                  <tr>
-                    <th>File</th>
-                    <th>Status</th>
-                    <th>Document ID</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {docs.map((doc) => (
-                    <tr key={doc.document_id} className={selectedDocId === doc.document_id ? "selectedRow" : ""}>
-                      <td>
-                        <button className="linkButton" onClick={() => handleLoadDoc(doc.document_id)}>
-                          {doc.file_name}
-                        </button>
-                      </td>
-                      <td>
-                        <span className={`badge ${doc.status}`}>{doc.status}</span>
-                      </td>
-                      <td>{doc.document_id}</td>
-                      <td>
-                        <div className="docActions">
-                          <button className="btn small" onClick={() => handleLoadDoc(doc.document_id)}>
-                            Select
-                          </button>
-                          <button className="btn small secondary" onClick={() => handleReprocess(doc.document_id)}>
-                            Reprocess
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {selectedDocDetail && (
-              <>
-                <div className="tilesRow">
-                  <SummaryTile label="Candidate" value={selectedCandidateName} />
-                  <SummaryTile label="Document ID" value={selectedDocDetail.document_id} />
-                  <SummaryTile label="File" value={selectedDocDetail.file_name} />
-                  <SummaryTile label="Status" value={selectedDocDetail.status} />
-                  <SummaryTile label="Jobs" value={(selectedDocDetail.jobs || []).length} />
-                </div>
-                <label className="checkboxRow compact">
-                  <input type="checkbox" checked={showRaw} onChange={(e) => setShowRaw(e.target.checked)} />
-                  Show raw parsed JSON
-                </label>
-                {showRaw && (
-                  <pre className="jsonBlock">{prettyJson(selectedDocDetail.parsed_payload || {})}</pre>
-                )}
-              </>
-            )}
-          </section>
-        )}
-
-        {activeSection === "analysis" && (
-          <section className="card">
-            <div className="sectionBanner">
-              <div>
-                <h2>Analysis and scores</h2>
-              </div>
-            </div>
-
-            <div className="moduleTabs" role="tablist" aria-label="Analysis Sections">
-              {ANALYSIS_MODULES.map((module) => (
-                <button
-                  key={module.id}
-                  className={`tabBtn ${activeModule === module.id ? "active" : ""}`}
-                  onClick={() => setActiveModule(module.id)}
-                  title={module.description}
-                  aria-label={`${module.label}: ${module.description}`}
+              <div className="panel">
+                <div
+                  className={`dropzone ${isDragging ? "dragging" : ""}`}
+                  onClick={openFilePicker}
+                  onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={handleDrop}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === "Enter" && openFilePicker()}
                 >
-                  <ModuleIcon id={module.id} />
-                  {module.label}
-                </button>
-              ))}
-            </div>
+                  <svg className="dropzoneIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M12 16V6m0 0l-4 4m4-4l4 4M5 18h14" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <p className="dropzoneTitle">Drop PDF files here</p>
+                  <p className="dropzoneHint">or click to browse · multiple files supported</p>
+                  <button className="btn btnGhost btnSm" type="button" onClick={(e) => { e.stopPropagation(); openFilePicker(); }}>
+                    Choose files
+                  </button>
+                  <input
+                    ref={fileInputRef}
+                    className="fileInputHidden"
+                    type="file"
+                    accept="application/pdf"
+                    multiple
+                    onChange={handleFileSelection}
+                  />
+                </div>
 
-            <div className="moduleIntro">
-              <p className="eyebrow">{activeModuleMeta.label}</p>
-            </div>
+                <label className="toggle" style={{ marginTop: 16 }}>
+                  <input type="checkbox" checked={forceReprocess} onChange={(e) => setForceReprocess(e.target.checked)} />
+                  Reprocess duplicate files
+                </label>
+
+                {files.length > 0 && (
+                  <div className="fileList">
+                    {files.map((file, index) => (
+                      <div className="fileRow" key={`${file.name}-${index}`}>
+                        <FileIcon />
+                        <span className="fileRowName">{file.name}</span>
+                        <button className="btnIcon" type="button" onClick={() => removeSelectedFile(index)} aria-label="Remove file">×</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {loading && activeSection === "upload" && (
+                  <div className="uploadProgress">
+                    <div className="uploadProgressTop">
+                      <span>{loadingMessage || "Uploading…"}</span>
+                      <strong>{uploadProgress}%</strong>
+                    </div>
+                    <div className="uploadProgressBar">
+                      <div className="uploadProgressFill" style={{ width: `${uploadProgress}%` }} />
+                    </div>
+                  </div>
+                )}
+
+                <div className="btnRow" style={{ marginTop: 16 }}>
+                  <button className="btn" onClick={handleUpload} disabled={loading || files.length === 0}>
+                    {loading ? "Processing…" : "Parse CVs"}
+                  </button>
+                  {files.length > 0 && (
+                    <button className="btn btnGhost" type="button" onClick={clearSelectedFiles}>Clear all</button>
+                  )}
+                </div>
+
+                {uploadResult && (
+                  <>
+                    <div className="sectionDivider" />
+                    <div className="statsGrid">
+                      <SummaryTile label="Total" value={(uploadResult.results || []).length} />
+                      <SummaryTile label="Success" value={(uploadResult.results || []).filter((x) => x.status === "success").length} />
+                      <SummaryTile label="Failed" value={(uploadResult.results || []).filter((x) => x.status === "failed").length} />
+                      <SummaryTile label="Skipped" value={(uploadResult.results || []).filter((x) => x.status === "skipped").length} />
+                    </div>
+                    <div className="tableWrap">
+                      <table className="dataTable">
+                        <thead>
+                          <tr><th>File</th><th>Status</th><th>Document ID</th><th>Notes</th></tr>
+                        </thead>
+                        <tbody>
+                          {(uploadResult.results || []).map((r, idx) => (
+                            <tr key={`${r.file}-${idx}`}>
+                              <td>{r.file}</td>
+                              <td><span className={`badge ${r.status}`}>{r.status}</span></td>
+                              <td>{r.document_id || "—"}</td>
+                              <td>{r.error || r.reason || "—"}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="btnRow" style={{ marginTop: 16 }}>
+                      <button className="btn btnGhost btnSm" onClick={() => setActiveSection("documents")}>View candidates →</button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </>
+          )}
+
+          {activeSection === "documents" && (
+            <>
+              <PageHeader
+                title="Candidates"
+                description={`${docs.length} parsed CV${docs.length !== 1 ? "s" : ""} in your library. Select one to open the analysis workspace.`}
+              />
+
+              {docs.length === 0 ? (
+                <EmptyState
+                  title="No candidates yet"
+                  description="Upload PDF resumes to get started."
+                  action={<button className="btn btnSm" onClick={() => setActiveSection("upload")}>Upload CVs</button>}
+                />
+              ) : (
+                <>
+                  <div className="candidateGrid">
+                    {docs.map((doc) => (
+                      <button
+                        key={doc.document_id}
+                        className={`candidateCard ${selectedDocId === doc.document_id ? "selected" : ""}`}
+                        onClick={() => handleLoadDoc(doc.document_id)}
+                      >
+                        <div className="candidateCardTop">
+                          <span className="candidateCardName">{doc.file_name}</span>
+                          <span className={`badge badgeSm ${doc.status}`}>{doc.status}</span>
+                        </div>
+                        <span className="candidateCardFile">ID {doc.document_id}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                </>
+              )}
+
+              {selectedDocDetail && (
+                <div className="panel">
+                  <h2 className="panelTitle">Profile summary</h2>
+                  <div className="statsGrid">
+                    <SummaryTile label="Candidate" value={selectedCandidateName} />
+                    <SummaryTile label="Document ID" value={selectedDocDetail.document_id} />
+                    <SummaryTile label="File" value={selectedDocDetail.file_name} />
+                    <SummaryTile label="Status" value={selectedDocDetail.status} />
+                    <SummaryTile label="Jobs" value={(selectedDocDetail.jobs || []).length} />
+                  </div>
+                  <label className="toggle">
+                    <input type="checkbox" checked={showRaw} onChange={(e) => setShowRaw(e.target.checked)} />
+                    Show raw parsed JSON
+                  </label>
+                  {showRaw && <pre className="jsonBlock">{prettyJson(selectedDocDetail.parsed_payload || {})}</pre>}
+                  <div className="btnRow" style={{ marginTop: 16 }}>
+                    <button className="btn" onClick={() => setActiveSection("analysis")}>Continue to analysis →</button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
+          {activeSection === "analysis" && (
+            <>
+              {!selectedDocId ? (
+                <EmptyState
+                  title="Select a candidate"
+                  description="Pick someone from the sidebar or Candidates page to unlock module analysis."
+                  action={<button className="btn btnSm" type="button" onClick={() => setActiveSection("documents")}>Browse candidates</button>}
+                />
+              ) : (
+                <div className="analysisShell">
+                  <ModuleRail
+                    modules={ANALYSIS_MODULES}
+                    activeId={activeModule}
+                    onSelect={setActiveModule}
+                  />
+                  <div className="analysisMain">
+                    <div className="analysisModuleHead">
+                      <h2>{activeModuleMeta.label}</h2>
+                      <p>{activeModuleMeta.description}</p>
+                    </div>
 
             {activeModule === "education" ? (
             <>
-              <div className="rowButtons">
-                <button className="btn" onClick={handleLoadEducationFacts} disabled={loading || !selectedDocId}>
-                  Load Facts
-                </button>
-                <button className="btn secondary" onClick={handleAnalyzeEducation} disabled={loading || !selectedDocId}>
-                  Run Analysis
-                </button>
-              </div>
+              <AnalysisToolbar
+                onLoadFacts={handleLoadEducationFacts}
+                onAnalyze={handleAnalyzeEducation}
+                loading={loading}
+                disabled={!selectedDocId}
+                regen={regen}
+                onRegenChange={setRegen}
+              />
 
               {educationFacts && (
-                <>
-                  <h3>Education Facts</h3>
-                  <div className="tilesRow">
+                <Section title="Structured facts" description="Deterministic extraction from the parsed CV — no AI interpretation.">
+                  <div className="statsGrid">
                     <SummaryTile
                       label="Highest Degree"
                       value={educationFacts.facts?.highest_qualification?.degree_title || "missing"}
@@ -1055,109 +724,77 @@ export default function App() {
 
                   <EducationTrendChart rows={educationFacts.facts?.education_timeline || []} />
 
-                  <h4>Timeline</h4>
-                  <table className="dataTable">
-                    <thead>
-                      <tr>
-                        <th>Level</th>
-                        <th>Degree</th>
-                        <th>Institution</th>
-                        <th>End Year</th>
-                        <th>Score</th>
-                        <th>Normalized</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(educationFacts.facts?.education_timeline || []).map((row, i) => (
-                        <tr key={`edu-row-${i}`}>
-                          <td>{row.level}</td>
-                          <td>{row.degree_title}</td>
-                          <td>{row.institution}</td>
-                          <td>{row.end_year}</td>
-                          <td>{row.score_raw} ({row.score_type})</td>
-                          <td>{row.score_normalized_100 ?? "-"}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <DataTable
+                    columns={[
+                      { key: "level", label: "Level" },
+                      { key: "degree_title", label: "Degree" },
+                      { key: "institution", label: "Institution" },
+                      { key: "end_year", label: "End year" },
+                      {
+                        key: "score",
+                        label: "Score",
+                        render: (r) => `${r.score_raw} (${r.score_type})`,
+                      },
+                      {
+                        key: "score_normalized_100",
+                        label: "Normalized",
+                        render: (r) => r.score_normalized_100 ?? "—",
+                      },
+                    ]}
+                    rows={educationFacts.facts?.education_timeline || []}
+                    emptyMessage="No education timeline entries"
+                    getRowKey={(row, i) => `edu-${i}-${row.end_year}`}
+                  />
 
-                  <h4>Detected Gaps</h4>
-                  <table className="dataTable">
-                    <thead>
-                      <tr>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Gap (Years)</th>
-                        <th>Class</th>
-                        <th>Justified</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(educationFacts.facts?.gaps || []).length === 0 ? (
-                        <tr>
-                          <td colSpan={5}>No detectable gaps</td>
-                        </tr>
-                      ) : (
-                        (educationFacts.facts?.gaps || []).map((g, i) => (
-                          <tr key={`gap-${i}`}>
-                            <td>{g.from_stage}</td>
-                            <td>{g.to_stage}</td>
-                            <td>{g.gap_years}</td>
-                            <td>{g.classification}</td>
-                            <td>{String(g.justified_by_experience)}</td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </>
+                  <DataTable
+                    columns={[
+                      { key: "from_stage", label: "From" },
+                      { key: "to_stage", label: "To" },
+                      { key: "gap_years", label: "Gap (years)" },
+                      { key: "classification", label: "Class" },
+                      {
+                        key: "justified",
+                        label: "Justified",
+                        render: (g) => String(g.justified_by_experience),
+                      },
+                    ]}
+                    rows={educationFacts.facts?.gaps || []}
+                    emptyMessage="No detectable education gaps"
+                    getRowKey={(_, i) => `gap-${i}`}
+                  />
+                </Section>
               )}
 
               {educationAnalysis && (
-                <>
-                  <h3>Education Analysis</h3>
-                  <div className="tilesRow">
-                    <SummaryTile
-                      label="Strength"
-                      value={educationAnalysis.analysis?.overall_education_assessment?.strength || "missing"}
-                    />
-                    <SummaryTile
-                      label="Confidence"
-                      value={educationAnalysis.analysis?.overall_education_assessment?.confidence ?? 0}
-                    />
-                    <SummaryTile
-                      label="Model"
-                      value={educationAnalysis.analysis_model || "default"}
-                    />
-                    <SummaryTile
-                      label="Cached"
-                      value={String(educationAnalysis.cached)}
-                    />
-                  </div>
-
-                  <p className="summaryText">
-                    {educationAnalysis.analysis?.overall_education_assessment?.summary || "No summary returned."}
-                  </p>
-
+                <Section title="AI insights" description="Model-generated assessment and question-level answers." variant="insights">
+                  <AssessmentHero
+                    strength={educationAnalysis.analysis?.overall_education_assessment?.strength}
+                    confidence={educationAnalysis.analysis?.overall_education_assessment?.confidence ?? 0}
+                    summary={educationAnalysis.analysis?.overall_education_assessment?.summary}
+                    meta={[
+                      { label: "Model", value: educationAnalysis.analysis_model || "default" },
+                      { label: "Cached", value: String(educationAnalysis.cached) },
+                    ]}
+                  />
                   <AnswerCardGrid answers={educationAnalysis.analysis?.answers || []} prefix="edu-ans" />
-                </>
+                </Section>
               )}
             </>
             ) : activeModule === "skills" ? (
             <>
-              <div className="rowButtons">
-                <button className="btn" onClick={handleLoadSkillsFacts} disabled={loading || !selectedDocId}>
-                  Load Facts
-                </button>
-                <button className="btn secondary" onClick={handleAnalyzeSkills} disabled={loading || !selectedDocId}>
-                  Run Analysis
-                </button>
-              </div>
+              <AnalysisToolbar
+                onLoadFacts={handleLoadSkillsFacts}
+                onAnalyze={handleAnalyzeSkills}
+                loading={loading}
+                disabled={!selectedDocId}
+                regen={regen}
+                onRegenChange={setRegen}
+              />
 
               {skillsFacts && (
                 <>
                   <h3>Skills Facts</h3>
-                  <div className="tilesRow">
+                  <div className="statsGrid">
                     <SummaryTile label="Skills" value={skillsFacts.facts?.skills_count || 0} />
                     <SummaryTile
                       label="Strongly Evidenced"
@@ -1203,50 +840,35 @@ export default function App() {
               )}
 
               {skillsAnalysis && (
-                <>
-                  <h3>Skills Analysis</h3>
-                  <div className="tilesRow">
-                    <SummaryTile
-                      label="Strength"
-                      value={skillsAnalysis.analysis?.overall_skills_assessment?.strength || "missing"}
-                    />
-                    <SummaryTile
-                      label="Confidence"
-                      value={skillsAnalysis.analysis?.overall_skills_assessment?.confidence ?? 0}
-                    />
-                    <SummaryTile
-                      label="Model"
-                      value={skillsAnalysis.analysis_model || "default"}
-                    />
-                    <SummaryTile
-                      label="Cached"
-                      value={String(skillsAnalysis.cached)}
-                    />
-                  </div>
-
-                  <p className="summaryText">
-                    {skillsAnalysis.analysis?.overall_skills_assessment?.summary || "No summary returned."}
-                  </p>
-
+                <Section title="AI insights" description="Model-generated assessment and question-level answers." variant="insights">
+                  <AssessmentHero
+                    strength={skillsAnalysis.analysis?.overall_skills_assessment?.strength}
+                    confidence={skillsAnalysis.analysis?.overall_skills_assessment?.confidence ?? 0}
+                    summary={skillsAnalysis.analysis?.overall_skills_assessment?.summary}
+                    meta={[
+                      { label: "Model", value: skillsAnalysis.analysis_model || "default" },
+                      { label: "Cached", value: String(skillsAnalysis.cached) },
+                    ]}
+                  />
                   <AnswerCardGrid answers={skillsAnalysis.analysis?.answers || []} prefix="skills-ans" />
-                </>
+                </Section>
               )}
             </>
             ) : activeModule === "experience" ? (
             <>
-              <div className="rowButtons">
-                <button className="btn" onClick={handleLoadExperienceFacts} disabled={loading || !selectedDocId}>
-                  Load Facts
-                </button>
-                <button className="btn secondary" onClick={handleAnalyzeExperience} disabled={loading || !selectedDocId}>
-                  Run Analysis
-                </button>
-              </div>
+              <AnalysisToolbar
+                onLoadFacts={handleLoadExperienceFacts}
+                onAnalyze={handleAnalyzeExperience}
+                loading={loading}
+                disabled={!selectedDocId}
+                regen={regen}
+                onRegenChange={setRegen}
+              />
 
               {experienceFacts && (
                 <>
                   <h3>Experience Facts</h3>
-                  <div className="tilesRow">
+                  <div className="statsGrid">
                     <SummaryTile label="Records" value={experienceFacts.facts?.experience_records_count || 0} />
                     <SummaryTile label="Job Overlaps" value={(experienceFacts.facts?.job_overlaps || []).length} />
                     <SummaryTile label="Edu-Job Overlaps" value={(experienceFacts.facts?.education_job_overlaps || []).length} />
@@ -1336,51 +958,42 @@ export default function App() {
               )}
 
               {experienceAnalysis && (
-                <>
-                  <h3>Experience Analysis</h3>
-                  <div className="tilesRow">
-                    <SummaryTile
-                      label="Strength"
-                      value={experienceAnalysis.analysis?.overall_experience_assessment?.strength || "missing"}
-                    />
-                    <SummaryTile
-                      label="Confidence"
-                      value={experienceAnalysis.analysis?.overall_experience_assessment?.confidence ?? 0}
-                    />
-                    <SummaryTile label="Model" value={experienceAnalysis.analysis_model || "default"} />
-                    <SummaryTile label="Cached" value={String(experienceAnalysis.cached)} />
-                  </div>
-
-                  <p className="summaryText">
-                    {experienceAnalysis.analysis?.overall_experience_assessment?.summary || "No summary returned."}
-                  </p>
-
+                <Section title="AI insights" description="Model-generated assessment and question-level answers." variant="insights">
+                  <AssessmentHero
+                    strength={experienceAnalysis.analysis?.overall_experience_assessment?.strength}
+                    confidence={experienceAnalysis.analysis?.overall_experience_assessment?.confidence ?? 0}
+                    summary={experienceAnalysis.analysis?.overall_experience_assessment?.summary}
+                    meta={[
+                      { label: "Model", value: experienceAnalysis.analysis_model || "default" },
+                      { label: "Cached", value: String(experienceAnalysis.cached) },
+                    ]}
+                  />
                   <AnswerCardGrid answers={experienceAnalysis.analysis?.answers || []} prefix="exp-ans" />
-                </>
+                </Section>
               )}
             </>
             ) : activeModule === "research" ? (
             <>
-              <div className="rowButtons">
-                <button className="btn" onClick={handleLoadResearchFacts} disabled={loading || !selectedDocId}>
-                  Load Facts
-                </button>
-                <button className="btn secondary" onClick={handleAnalyzeResearch} disabled={loading || !selectedDocId}>
-                  Run Analysis
-                </button>
-                {researchFacts && researchUnverifiedCount > 0 ? (
-                  <button className="btn secondary" onClick={handleRecheckUnverifiedResearch} disabled={loading || !selectedDocId}>
-                    Recheck Unverified ({researchUnverifiedCount})
-                  </button>
-                ) : researchFacts ? (
-                  <span className="summaryText">No unverified papers to recheck.</span>
-                ) : null}
-              </div>
+              <AnalysisToolbar
+                onLoadFacts={handleLoadResearchFacts}
+                onAnalyze={handleAnalyzeResearch}
+                loading={loading}
+                disabled={!selectedDocId}
+                regen={regen}
+                onRegenChange={setRegen}
+                extra={
+                  researchFacts && researchUnverifiedCount > 0 ? (
+                    <button className="btn btnGhost btnSm" type="button" onClick={handleRecheckUnverifiedResearch} disabled={loading || !selectedDocId}>
+                      Recheck unverified ({researchUnverifiedCount})
+                    </button>
+                  ) : null
+                }
+              />
 
               {researchFacts && (
                 <>
                   <h3>Research Facts</h3>
-                  <div className="tilesRow">
+                  <div className="statsGrid">
                     <SummaryTile label="Publications" value={researchFacts.facts?.publications_count || 0} />
                     <SummaryTile label="Cache Hits" value={researchCacheHitCount} />
                     <SummaryTile
@@ -1399,6 +1012,7 @@ export default function App() {
                   </div>
 
                   <h4>Publication Verifications</h4>
+                  <div className="tableWrap">
                   <table className="dataTable">
                     <thead>
                       <tr>
@@ -1439,6 +1053,7 @@ export default function App() {
                       ))}
                     </tbody>
                   </table>
+                  </div>
 
                   <h4>Topic Variability</h4>
                   <p className="summaryText">
@@ -1448,45 +1063,31 @@ export default function App() {
               )}
 
               {researchAnalysis && (
-                <>
-                  <h3>Research Analysis</h3>
-                  <div className="tilesRow">
-                    <SummaryTile
-                      label="Strength"
-                      value={researchAnalysis.analysis?.overall_research_assessment?.strength || "missing"}
-                    />
-                    <SummaryTile
-                      label="Confidence"
-                      value={researchAnalysis.analysis?.overall_research_assessment?.confidence ?? 0}
-                    />
-                    <SummaryTile label="Model" value={researchAnalysis.analysis_model || "default"} />
-                    <SummaryTile label="Cached" value={String(researchAnalysis.cached)} />
-                  </div>
-
-                  <p className="summaryText">
-                    {researchAnalysis.analysis?.overall_research_assessment?.summary || "No summary returned."}
-                  </p>
-
+                <Section title="AI insights" description="Model-generated assessment and question-level answers." variant="insights">
+                  <AssessmentHero
+                    strength={researchAnalysis.analysis?.overall_research_assessment?.strength}
+                    confidence={researchAnalysis.analysis?.overall_research_assessment?.confidence ?? 0}
+                    summary={researchAnalysis.analysis?.overall_research_assessment?.summary}
+                    meta={[
+                      { label: "Model", value: researchAnalysis.analysis_model || "default" },
+                      { label: "Cached", value: String(researchAnalysis.cached) },
+                    ]}
+                  />
                   <AnswerCardGrid answers={researchAnalysis.analysis?.answers || []} prefix="research-ans" />
-                </>
+                </Section>
               )}
             </>
             ) : activeModule === "awards" ? (
             <>
-              <div className="rowButtons">
-                <button className="btn" onClick={handleLoadAwards} disabled={loading || !selectedDocId}>
-                  Load Awards
+              <div className="analysisToolbar" style={{ marginBottom: 24 }}>
+                <button className="btn btnSecondary" type="button" onClick={handleLoadAwards} disabled={loading || !selectedDocId}>
+                  Load awards
                 </button>
               </div>
 
-              <h3>Awards Facts</h3>
-
-              <p className="summaryText">
-                A clean view of honors extracted from the CV, with emphasis on issuers and chronology.
-              </p>
-
+              <Section title="Honors & awards" description="Honors extracted from the CV with issuer and chronology.">
               {selectedDocDetail && (
-                <div className="tilesRow">
+                <div className="statsGrid">
                   <SummaryTile label="Candidate" value={selectedCandidateName} />
                   <SummaryTile label="File" value={selectedDocDetail.file_name || "-"} />
                   <SummaryTile label="Status" value={selectedDocDetail.status || "-"} />
@@ -1496,7 +1097,7 @@ export default function App() {
 
               {awardsData && (
                 <>
-                  <div className="tilesRow">
+                  <div className="statsGrid">
                     <SummaryTile
                       label="Unique Issuers"
                       value={new Set(awardsData.awards.map((a) => a?.issuer?.value).filter(Boolean)).size}
@@ -1542,22 +1143,23 @@ export default function App() {
                   )}
                 </>
               )}
+              </Section>
             </>
             ) : activeModule === "books_patents" ? (
             <>
-              <div className="rowButtons">
-                <button className="btn" onClick={handleLoadBooksPatentsFacts} disabled={loading || !selectedDocId}>
-                  Load Facts
-                </button>
-                <button className="btn secondary" onClick={handleAnalyzeBooksPatents} disabled={loading || !selectedDocId}>
-                  Run Analysis
-                </button>
-              </div>
+              <AnalysisToolbar
+                onLoadFacts={handleLoadBooksPatentsFacts}
+                onAnalyze={handleAnalyzeBooksPatents}
+                loading={loading}
+                disabled={!selectedDocId}
+                regen={regen}
+                onRegenChange={setRegen}
+              />
 
               {booksPatentsFacts && (
                 <>
                   <h3>Books / Patents Facts</h3>
-                  <div className="tilesRow">
+                  <div className="statsGrid">
                     <SummaryTile label="Patents" value={booksPatentsFacts.facts?.patents_count || 0} />
                     <SummaryTile label="Books" value={booksPatentsFacts.facts?.books_count || 0} />
                     <SummaryTile label="Combined" value={booksPatentsFacts.facts?.combined_count || 0} />
@@ -1596,44 +1198,35 @@ export default function App() {
               )}
 
               {booksPatentsAnalysis && (
-                <>
-                  <h3>Books / Patents Analysis</h3>
-                  <div className="tilesRow">
-                    <SummaryTile
-                      label="Strength"
-                      value={booksPatentsAnalysis.analysis?.overall_books_patents_assessment?.strength || "missing"}
-                    />
-                    <SummaryTile
-                      label="Confidence"
-                      value={booksPatentsAnalysis.analysis?.overall_books_patents_assessment?.confidence ?? 0}
-                    />
-                    <SummaryTile label="Model" value={booksPatentsAnalysis.analysis_model || "default"} />
-                    <SummaryTile label="Cached" value={String(booksPatentsAnalysis.cached)} />
-                  </div>
-
-                  <p className="summaryText">
-                    {booksPatentsAnalysis.analysis?.overall_books_patents_assessment?.summary || "No summary returned."}
-                  </p>
-
+                <Section title="AI insights" description="Model-generated assessment and question-level answers." variant="insights">
+                  <AssessmentHero
+                    strength={booksPatentsAnalysis.analysis?.overall_books_patents_assessment?.strength}
+                    confidence={booksPatentsAnalysis.analysis?.overall_books_patents_assessment?.confidence ?? 0}
+                    summary={booksPatentsAnalysis.analysis?.overall_books_patents_assessment?.summary}
+                    meta={[
+                      { label: "Model", value: booksPatentsAnalysis.analysis_model || "default" },
+                      { label: "Cached", value: String(booksPatentsAnalysis.cached) },
+                    ]}
+                  />
                   <AnswerCardGrid answers={booksPatentsAnalysis.analysis?.answers || []} prefix="bp-ans" />
-                </>
+                </Section>
               )}
             </>
             ) : activeModule === "supervision" ? (
             <>
-              <div className="rowButtons">
-                <button className="btn" onClick={handleLoadSupervisionFacts} disabled={loading || !selectedDocId}>
-                  Load Facts
-                </button>
-                <button className="btn secondary" onClick={handleAnalyzeSupervision} disabled={loading || !selectedDocId}>
-                  Run Analysis
-                </button>
-              </div>
+              <AnalysisToolbar
+                onLoadFacts={handleLoadSupervisionFacts}
+                onAnalyze={handleAnalyzeSupervision}
+                loading={loading}
+                disabled={!selectedDocId}
+                regen={regen}
+                onRegenChange={setRegen}
+              />
 
               {supervisionFacts && (
                 <>
                   <h3>Supervision Facts</h3>
-                  <div className="tilesRow">
+                  <div className="statsGrid">
                     <SummaryTile label="Records" value={supervisionFacts.facts?.supervision_count || 0} />
                     <SummaryTile
                       label="Unique Students"
@@ -1674,55 +1267,44 @@ export default function App() {
               )}
 
               {supervisionAnalysis && (
-                <>
-                  <h3>Supervision Analysis</h3>
-                  <div className="tilesRow">
-                    <SummaryTile
-                      label="Strength"
-                      value={supervisionAnalysis.analysis?.overall_supervision_assessment?.strength || "missing"}
-                    />
-                    <SummaryTile
-                      label="Confidence"
-                      value={supervisionAnalysis.analysis?.overall_supervision_assessment?.confidence ?? 0}
-                    />
-                    <SummaryTile label="Model" value={supervisionAnalysis.analysis_model || "default"} />
-                    <SummaryTile label="Cached" value={String(supervisionAnalysis.cached)} />
-                  </div>
-
-                  <p className="summaryText">
-                    {supervisionAnalysis.analysis?.overall_supervision_assessment?.summary || "No summary returned."}
-                  </p>
-
+                <Section title="AI insights" description="Model-generated assessment and question-level answers." variant="insights">
+                  <AssessmentHero
+                    strength={supervisionAnalysis.analysis?.overall_supervision_assessment?.strength}
+                    confidence={supervisionAnalysis.analysis?.overall_supervision_assessment?.confidence ?? 0}
+                    summary={supervisionAnalysis.analysis?.overall_supervision_assessment?.summary}
+                    meta={[
+                      { label: "Model", value: supervisionAnalysis.analysis_model || "default" },
+                      { label: "Cached", value: String(supervisionAnalysis.cached) },
+                    ]}
+                  />
                   <AnswerCardGrid answers={supervisionAnalysis.analysis?.answers || []} prefix="sup-ans" />
-                </>
+                </Section>
               )}
             </>
             ) : (
             <div className="placeholderCard">
-              <h3>{activeModule.charAt(0).toUpperCase() + activeModule.slice(1)} Module</h3>
-              <p>
-                This section is prepared as a placeholder and will be implemented in the next phase.
-                For now, use the <strong>Education</strong> tab for full analysis.
-              </p>
+              <h3>{activeModuleMeta.label}</h3>
+              <p>This module is not available yet.</p>
             </div>
             )}
-          </section>
-        )}
-
-        {error && <div className="errorBox">{error}</div>}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+          </div>
+        </div>
 
         {loading && (
-          <div className="loadingOverlay" role="status" aria-live="polite" aria-busy="true">
-            <div className="loadingCard">
+          <>
+            <div className="loadingBar"><div className="loadingBarFill" /></div>
+            <div className="loadingToast" role="status" aria-live="polite">
               <div className="spinner" />
-              <div>
-                <div className="loadingTitle">Processing</div>
-                <div className="loadingText">{loadingMessage || "Working on your request..."}</div>
-              </div>
+              <span>{loadingMessage || "Working…"}</span>
             </div>
-          </div>
+          </>
         )}
-      </main>
+      </div>
     </div>
   );
 }
